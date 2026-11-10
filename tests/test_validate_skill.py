@@ -291,6 +291,25 @@ class SkillValidatorTests(unittest.TestCase):
                     (root / "notes.md").write_text(prefix + body + "\n", encoding="utf-8")
                     self.assertIn(f"notes.md:1:{rule}", validate_skill.validate(root))
 
+    def test_fine_grained_github_tokens_are_detected_without_echoing(self) -> None:
+        prefix = "github" + "_pat_"
+        for first_segment in ("A" * 22, "test" + "A" * 18):
+            with self.subTest(first_segment=first_segment):
+                root = self.make_repository()
+                value = prefix + first_segment + "_" + "B" * 59
+                (root / "notes.md").write_text(value + "\n", encoding="utf-8")
+                errors = validate_skill.validate(root)
+                self.assertEqual(errors, ["notes.md:1:SECRET_GITHUB_TOKEN"])
+                self.assertNotIn(value, "\n".join(errors))
+
+    def test_fine_grained_github_placeholder_is_allowed(self) -> None:
+        root = self.make_repository()
+        prefix = "github" + "_pat_"
+        name = "to" + "ken"
+        placeholder = prefix + "x" * 82
+        (root / "notes.md").write_text(f"{placeholder}\n{name}={placeholder}\n", encoding="utf-8")
+        self.assertEqual(validate_skill.validate(root), [])
+
     def test_complete_placeholder_forms_still_pass(self) -> None:
         root = self.make_repository()
         name = "to" + "ken"
