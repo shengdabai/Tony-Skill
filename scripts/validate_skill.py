@@ -28,7 +28,7 @@ SENSITIVE_FILENAME_RULES = (
 )
 SECRET_PATTERNS = (
     ("SECRET_PRIVATE_KEY", re.compile(r"-----BEGIN (?:RSA |DSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY-----")),
-    ("SECRET_GITHUB_TOKEN", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")),
+    ("SECRET_GITHUB_TOKEN", re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b")),
     ("SECRET_OPENAI_KEY", re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b")),
     ("SECRET_AWS_ACCESS_KEY", re.compile(r"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b")),
     (
@@ -48,7 +48,7 @@ PLACEHOLDER_PATTERN = re.compile(
     r"(?:[_-][a-z0-9]+)*)",
     re.IGNORECASE,
 )
-PROVIDER_PLACEHOLDER_PATTERN = re.compile(r"(?:gh[pousr]_|sk-(?:proj-)?|AKIA|ASIA)[xX]{16,}")
+PROVIDER_PLACEHOLDER_PATTERN = re.compile(r"(?:gh[pousr]_|github_pat_|sk-(?:proj-)?|AKIA|ASIA)[xX]{16,}")
 # Accept the published AWS example exactly, not arbitrary keys containing EXAMPLE.
 PROVIDER_DOCUMENTATION_EXAMPLES = {"AKIA" + "IOSFODNN7EXAMPLE"}
 
